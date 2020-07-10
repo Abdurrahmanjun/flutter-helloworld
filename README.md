@@ -1,6 +1,6 @@
 # flutter_app_helloworld
 
-A new Flutter application.
+A new Flutter application. folowing step from flutter documentation
 
 ## Getting Started
 
