@@ -1,6 +1,8 @@
-# flutter_app_helloworld
+# helloworld flutter app
 
 A new Flutter application. folowing step from flutter documentation
+[done] - https://flutter.dev/docs/get-started/codelab#step-1-create-the-starter-flutter-app
+[next] - https://codelabs.developers.google.com/codelabs/first-flutter-app-pt2/#0
 
 ## Getting Started
 
