@@ -7,12 +7,10 @@ class Home extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Hello Demo Flutter',
-      home: Scaffold(
-        appBar: AppBar(
-          title: Text("Home Page")
-        ),
-        body: RandomWords(),
-      )
+      theme: ThemeData(
+        primaryColor: Colors.white
+      ),
+      home: RandomWords()
     );
   }
 }
@@ -23,26 +21,75 @@ class RandomWords extends StatefulWidget {
 }
 
 class _RandomWordsState extends State<RandomWords> {
-
   final _suggestions = <WordPair>[];
   final _saved = Set<WordPair>();
   final _biggerFont = TextStyle(fontSize: 18.0);
 
   @override
   Widget build(BuildContext context) {
-      return ListView.builder(
-          padding : EdgeInsets.all(16.0),
-          itemBuilder: (context,i) {
-            if (i.isOdd) return Divider();
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Home Page"),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.list),
+            onPressed: _pushSaved,
+          )
+        ],
+      ),
+      body: _buildSuggestions(),
+    );
+  }
 
-            final index = i ~/ 2;
-            if (index >= _suggestions.length) {
-              _suggestions.addAll(generateWordPairs().take(10));
-            }
+  void _pushSaved() {
+    Navigator.of(context).push(
+      MaterialPageRoute<void>(
+        builder: (BuildContext context) {
 
-            return _buildRow(_suggestions[index]);
+          final tiles = _saved.map(
+              (WordPair pair) {
+                return ListTile(
+                  title: Text(
+                    pair.asPascalCase,
+                    style: _biggerFont,
+                  )
+                );
+              }
+          );
+
+          final divided = ListTile.divideTiles(
+            context: context,
+            tiles: tiles,
+          ).toList();
+
+          return Scaffold(
+            appBar: AppBar(
+              title: Text('Saved Suggestions'),
+            ),
+            body: ListView(children: divided),
+//            body: Center(
+//              child: Text('Hello World'),
+//            ),
+          );
+        }
+      )
+    );
+  }
+
+  Widget _buildSuggestions() {
+    return ListView.builder(
+        padding : EdgeInsets.all(16.0),
+        itemBuilder: (context,i) {
+          if (i.isOdd) return Divider();
+
+          final index = i ~/ 2;
+          if (index >= _suggestions.length) {
+            _suggestions.addAll(generateWordPairs().take(10));
           }
-      );
+
+          return _buildRow(_suggestions[index]);
+        }
+    );
   }
 
   Widget _buildRow(WordPair pair) {
