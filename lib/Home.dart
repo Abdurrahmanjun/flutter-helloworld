@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:english_words/english_words.dart';
 
 class Home extends StatelessWidget {
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -23,32 +23,49 @@ class RandomWords extends StatefulWidget {
 }
 
 class _RandomWordsState extends State<RandomWords> {
+
+  final _suggestions = <WordPair>[];
+  final _saved = Set<WordPair>();
+  final _biggerFont = TextStyle(fontSize: 18.0);
+
   @override
   Widget build(BuildContext context) {
-    final _suggestions = <WordPair>[];
-    final _biggerFont = TextStyle(fontSize: 18.0);
-//    return Text(wordPair.asPascalCase);
-
       return ListView.builder(
           padding : EdgeInsets.all(16.0),
           itemBuilder: (context,i) {
-            if (i.isOdd) return Divider(); /*2*/
+            if (i.isOdd) return Divider();
 
-            final index = i ~/ 2; /*3*/
+            final index = i ~/ 2;
             if (index >= _suggestions.length) {
-              _suggestions.addAll(generateWordPairs().take(10)); /*4*/
+              _suggestions.addAll(generateWordPairs().take(10));
             }
-            return _buildRow(_suggestions[index], _biggerFont);
+
+            return _buildRow(_suggestions[index]);
           }
       );
   }
 
-  Widget _buildRow(WordPair pair, TextStyle style) {
+  Widget _buildRow(WordPair pair) {
+    final alreadysaved = _saved.contains(pair);
+
     return ListTile(
         title: Text(
           pair.asPascalCase,
-          style: style,
-        )
+          style: _biggerFont,
+        ),
+        trailing: Icon(
+          alreadysaved ? Icons.favorite : Icons.favorite_border,
+          color: alreadysaved ? Colors.red : null,
+        ),
+        onTap: () {
+          setState(() {
+            if (alreadysaved) {
+              _saved.remove(pair);
+            } else {
+              _saved.add(pair);
+            }
+          });
+        }
     );
   }
 }
